@@ -33,11 +33,11 @@ def gmute(bot: Bot, update: Update, args: List[str]):
         return
 
     if int(user_id) in SUPPORT_USERS:
-        message.reply_text("OOOH someone's trying to gmute a support user! *grabs popcorn*")
+        message.reply_text("**shhh**")
         return
 
     if user_id == bot.id:
-        message.reply_text("-_- So funny, lets gmute myself why don't I? Nice try.")
+        message.reply_text("You Have Been Banned!")
         return
 
     try:
@@ -64,14 +64,20 @@ def gmute(bot: Bot, update: Update, args: List[str]):
 
         return
 
-    message.reply_text("*Gets duct tape ready* 😉")
-
+    message.reply_text("*Global Muting this Shit[!**")
     muter = update.effective_user  # type: Optional[User]
     send_to_list(bot, SUDO_USERS + SUPPORT_USERS,
-                 "{} is gmuting user {} "
-                 "because:\n{}".format(mention_html(muter.id, muter.first_name),
-                                       mention_html(user_chat.id, user_chat.first_name), reason or "No reason given"),
+                 "<b>Global Mute</b>" \
+                 "\n#GMUTE" \
+                 "\n<b>Status:</b> <code>Enforcing</code>" \
+                 "\n<b>Admin:</b> {}" \
+                 "\n<b>User:</b> {}" \
+                 "\n<b>ID:</b> <code>{}</code>" \
+                 "\n<b>Reason:</b> {}".format(mention_html(muter.id, muter.first_name),
+                                              mention_html(user_chat.id, user_chat.first_name), 
+                                                           user_chat.id, reason or "No reason given"), 
                  html=True)
+
 
     sql.gmute_user(user_id, user_chat.username or user_chat.first_name, reason)
 
@@ -116,8 +122,9 @@ def gmute(bot: Bot, update: Update, args: List[str]):
         except TelegramError:
             pass
 
-    send_to_list(bot, SUDO_USERS + SUPPORT_USERS, "gmute complete!")
-    message.reply_text("Person has been gmuted.")
+    send_to_list(bot, SUDO_USERS + SUPPORT_USERS, 
+                  "{} has been successfully gmuted!".format(mention_html(user_chat.id, user_chat.first_name)),
+                html=True)
 
 
 @run_async
@@ -140,12 +147,18 @@ def ungmute(bot: Bot, update: Update, args: List[str]):
 
     muter = update.effective_user  # type: Optional[User]
 
-    message.reply_text("I'll let {} speak again, globally.".format(user_chat.first_name))
 
     send_to_list(bot, SUDO_USERS + SUPPORT_USERS,
-                 "{} has ungmuted user {}".format(mention_html(muter.id, muter.first_name),
-                                                   mention_html(user_chat.id, user_chat.first_name)),
+                 "<b>Regression of Global Mute</b>" \
+                 "\n#UNGMUTE" \
+                 "\n<b>Status:</b> <code>Ceased</code>" \
+                 "\n<b>Admin:</b> {}" \
+                 "\n<b>User:</b> {}" \
+                 "\n<b>ID:</b> <code>{}</code>".format(mention_html(muter.id, muter.first_name),
+                                                       mention_html(user_chat.id, user_chat.first_name), 
+                                                                    user_chat.id),
                  html=True)
+
 
     chats = get_all_chats()
     for chat in chats:
@@ -190,9 +203,11 @@ def ungmute(bot: Bot, update: Update, args: List[str]):
 
     sql.ungmute_user(user_id)
 
-    send_to_list(bot, SUDO_USERS + SUPPORT_USERS, "un-gmute complete!")
+    send_to_list(bot, SUDO_USERS + SUPPORT_USERS, 
+                  "{} has been successfully un-gmuted!".format(mention_html(user_chat.id, 
+                                                                         user_chat.first_name)),
+                  html=True)
 
-    message.reply_text("Person has been un-gmuted.")
 
 
 @run_async
