@@ -5,15 +5,16 @@ from telegram import Message, Chat, Update, Bot, User
 from telegram.error import BadRequest
 from telegram.ext import run_async, CommandHandler, Filters
 from telegram.utils.helpers import mention_html
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup, ParseMode, User, CallbackQuery
 
 from tg_bot import dispatcher, BAN_STICKER, LOGGER
 from tg_bot.modules.disable import DisableAbleCommandHandler
 from tg_bot.modules.helper_funcs.chat_status import bot_admin, user_admin, is_user_ban_protected, can_restrict, \
-    is_user_admin, is_user_in_chat
+    is_user_admin, is_user_in_chat, is_bot_admin
 from tg_bot.modules.helper_funcs.extraction import extract_user_and_text
 from tg_bot.modules.helper_funcs.string_handling import extract_time
 from tg_bot.modules.log_channel import loggable
-
+from tg_bot.modules.helper_funcs.filters import CustomFilters
 
 @run_async
 @bot_admin
@@ -50,18 +51,21 @@ def ban(bot: Bot, update: Update, args: List[str]) -> str:
 
     log = "<b>{}:</b>" \
           "\n#BANNED" \
-          "\n<b>Admin:</b> {}" \
-          "\n<b>User:</b> {} (<code>{}</code>)".format(html.escape(chat.title),
-                                                       mention_html(user.id, user.first_name),
-                                                       mention_html(member.user.id, member.user.first_name),
-                                                       member.user.id)
+          "\n<b>• Admin:</b> {}" \
+          "\n<b>• User:</b> {}" \
+          "\n<b>• ID:</b> <code>{}</code>".format(html.escape(chat.title), mention_html(user.id, user.first_name), 
+                                                  mention_html(member.user.id, member.user.first_name), user_id)
+
+    reply = "{} has been banned!".format(mention_html(member.user.id, member.user.first_name))
     if reason:
-        log += "\n<b>Reason:</b> {}".format(reason)
+        log += "\n<b>• Reason:</b> {}".format(reason)
+        reply += "\n<b>Reason:</b> <i>{}</i>".format(reason)
 
     try:
         chat.kick_member(user_id)
-        bot.send_sticker(chat.id, BAN_STICKER)  # banhammer marie sticker
-        message.reply_text("Banned!")
+        keyboard = []
+        bot.send_sticker(update.effective_chat.id, BAN_STICKER)  # banhammer marie sticker
+        message.reply_text(reply, reply_markup=keyboard, parse_mode=ParseMode.HTML)
         return log
 
     except BadRequest as excp:
@@ -129,21 +133,22 @@ def temp_ban(bot: Bot, update: Update, args: List[str]) -> str:
         return ""
 
     log = "<b>{}:</b>" \
-          "\n#TEMP BANNED" \
-          "\n<b>Admin:</b> {}" \
-          "\n<b>User:</b> {} (<code>{}</code>)" \
-          "\n<b>Time:</b> {}".format(html.escape(chat.title),
-                                     mention_html(user.id, user.first_name),
-                                     mention_html(member.user.id, member.user.first_name),
-                                     member.user.id,
-                                     time_val)
+          "\n#TEMPBAN" \
+          "\n<b>• Admin:</b> {}" \
+          "\n<b>• User:</b> {}" \
+          "\n<b>• ID:</b> <code>{}</code>" \
+          "\n<b>• Time:</b> {}".format(html.escape(chat.title), mention_html(user.id, user.first_name),
+                                                                mention_html(member.user.id, member.user.first_name), 
+                                                                             user_id, time_val)
     if reason:
-        log += "\n<b>Reason:</b> {}".format(reason)
+        log += "\n<b>• Reason:</b> {}".format(reason)
 
     try:
         chat.kick_member(user_id, until_date=bantime)
-        bot.send_sticker(chat.id, BAN_STICKER)  # banhammer marie sticker
-        message.reply_text("Banned! User will be banned for {}.".format(time_val))
+        keyboard = []
+        bot.send_sticker(update.effective_chat.id, BAN_STICKER)  # banhammer marie sticker
+        reply = "{} has been temporarily banned for {}!".format(mention_html(member.user.id, member.user.first_name),time_val)
+        message.reply_text(reply, reply_markup=keyboard, parse_mode=ParseMode.HTML)
         return log
 
     except BadRequest as excp:
@@ -195,16 +200,19 @@ def kick(bot: Bot, update: Update, args: List[str]) -> str:
     res = chat.unban_member(user_id)  # unban on current user = kick
     if res:
         bot.send_sticker(chat.id, BAN_STICKER)  # banhammer marie sticker
-        message.reply_text("Kicked!")
+        keyboard = []
+        reply = "{} has been kicked!".format(mention_html(member.user.id, member.user.first_name))
+        message.reply_text(reply, reply_markup=keyboard, parse_mode=ParseMode.HTML)
+
         log = "<b>{}:</b>" \
               "\n#KICKED" \
-              "\n<b>Admin:</b> {}" \
-              "\n<b>User:</b> {} (<code>{}</code>)".format(html.escape(chat.title),
-                                                           mention_html(user.id, user.first_name),
-                                                           mention_html(member.user.id, member.user.first_name),
-                                                           member.user.id)
+              "\n<b>• Admin:</b> {}" \
+              "\n<b>• User:</b> {}" \
+              "\n<b>• ID:</b> <code>{}</code>".format(html.escape(chat.title),
+                                                      mention_html(user.id, user.first_name),
+                                                      mention_html(member.user.id, member.user.first_name), user_id)
         if reason:
-            log += "\n<b>Reason:</b> {}".format(reason)
+            log += "\n<b>• Reason:</b> {}".format(reason)
 
         return log
 
@@ -212,8 +220,7 @@ def kick(bot: Bot, update: Update, args: List[str]) -> str:
         message.reply_text("Well damn, I can't kick that user.")
 
     return ""
-
-
+        
 @run_async
 @bot_admin
 @can_restrict
@@ -267,19 +274,19 @@ def unban(bot: Bot, update: Update, args: List[str]) -> str:
 
     log = "<b>{}:</b>" \
           "\n#UNBANNED" \
-          "\n<b>Admin:</b> {}" \
-          "\n<b>User:</b> {} (<code>{}</code>)".format(html.escape(chat.title),
-                                                       mention_html(user.id, user.first_name),
-                                                       mention_html(member.user.id, member.user.first_name),
-                                                       member.user.id)
+          "\n<b>• Admin:</b> {}" \
+          "\n<b>• User:</b> {}" \
+          "\n<b>• ID:</b> <code>{}</code>".format(html.escape(chat.title),
+                                                  mention_html(user.id, user.first_name),
+                                                  mention_html(member.user.id, member.user.first_name), user_id)
     if reason:
-        log += "\n<b>Reason:</b> {}".format(reason)
+        log += "\n<b>• Reason:</b> {}".format(reason)
 
     return log
 
 
 __help__ = """
- - /kickme: kicks the user who issued the command
+ - /kickme: kicks the user who issued the command.
 
 *Admin only:*
  - /ban <userhandle>: bans a user. (via handle, or reply)
