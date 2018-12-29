@@ -3,6 +3,7 @@ import json
 import random
 from datetime import datetime
 from typing import Optional, List
+import re
 import time
 import requests
 from telegram import Message, Chat, Update, Bot, MessageEntity
@@ -15,6 +16,8 @@ from tg_bot.__main__ import STATS, USER_INFO
 from tg_bot.modules.disable import DisableAbleCommandHandler
 from tg_bot.modules.helper_funcs.extraction import extract_user
 from tg_bot.modules.helper_funcs.filters import CustomFilters
+from tg_bot.modules.rextester.api import Rextester, CompilerError
+from tg_bot.modules.rextester.langs import languages
 
 RUN_STRINGS = (
     "Do you really think you are smart?",
@@ -368,13 +371,49 @@ def stats(bot: Bot, update: Update):
     update.effective_message.reply_text("Current stats:\n" + "\n".join([mod.__stats__() for mod in STATS]))
 
 
+def execute(bot: Bot, update: Update, args: List[str]):
+
+    message = update.effective_message
+    text = ' '.join(args)
+    regex = re.search('^([\w.#+]+)\s+([\s\S]+?)(?:\s+\/stdin\s+([\s\S]+))?$', text, re.IGNORECASE)
+
+    if not regex:
+        available_languages = ', '.join(languages.keys())
+        message.reply_text('*The availale languages are:*\n`{}`'.format(available_languages), parse_mode=ParseMode.MARKDOWN)
+        return
+
+    language = regex.group(1)
+    code = regex.group(2)
+    stdin = regex.group(3)
+
+    try:
+        regexter = Rextester(language, code, stdin)
+    except CompilerError as exc: # Exception on empy code or missing output
+        message.reply_text(exc)
+        return
+
+    output = ""
+    output += "*Language:*\n`{}`".format(language)
+    output += "*\n\nSource:*\n`{}`".format(code)
+
+    if regexter.result:
+        output += "*\n\nResult:*\n`{}`".format(regexter.result)
+
+    if regexter.warnings:
+        output += "\n\n*Warnings:*\n`{}`\n".format(regexter.warnings)
+
+    if regexter.errors:
+        output += "\n\n*Errors:*\n'{}`".format(regexter.errors)
+
+    message.reply_text(output, parse_mode=ParseMode.MARKDOWN)
+
 # /ip is for private use
 __help__ = """
  - /id: get the current group id. If used by replying to a message, gets that user's id.
  - /runs: reply a random string from an array of replies.
  - /slap: slap a user, or get slapped if not a reply.
  - /info: get information about a user.
-
+ - /exec <language> <code> [/stdin <stdin>]: Execute a code in a specified language. Send an empty command to get the suppoerted languages.
  - /markdownhelp: quick summary of how markdown works in telegram - can only be called in private chats.
 """
 
@@ -394,6 +433,7 @@ ECHO_HANDLER = CommandHandler("echo", echo, filters=CustomFilters.sudo_filter)
 MD_HELP_HANDLER = CommandHandler("markdownhelp", markdown_help, filters=Filters.private)
 
 STATS_HANDLER = CommandHandler("stats", stats, filters=CustomFilters.sudo_filter)
+EXECUTE_HANDLER = DisableAbleCommandHandler("exec", execute, pass_args=True)
 
 dispatcher.add_handler(ID_HANDLER)
 dispatcher.add_handler(PING_HANDLER)
@@ -405,3 +445,4 @@ dispatcher.add_handler(INFO_HANDLER)
 dispatcher.add_handler(ECHO_HANDLER)
 dispatcher.add_handler(MD_HELP_HANDLER)
 dispatcher.add_handler(STATS_HANDLER)
+dispatcher.add_handler(EXECUTE_HANDLER)
