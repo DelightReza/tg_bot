@@ -17,7 +17,7 @@ from tg_bot.modules.helper_funcs.extraction import extract_user
 from tg_bot.modules.helper_funcs.filters import CustomFilters
 
 RUN_STRINGS = (
-    "Where do you think you're going?",
+    "Do you really think you are smart?",
     "Huh? what? did they get away?",
     "ZZzzZZzz... Huh? what? oh, just them again, nevermind.",
     "Get back here!",
@@ -247,7 +247,7 @@ def info(bot: Bot, update: Update, args: List[str]):
     text += "\nPermanent user link: {}".format(mention_html(user.id, "link"))
 
     if user.id == OWNER_ID:
-        text += "\n\nThis person is my owner - I would never do anything against them!"
+        text += "\n\nThis person is my owner - So don't Mess with him!"
     else:
         if user.id in SUDO_USERS:
             text += "\nThis person is one of my sudo users! " \

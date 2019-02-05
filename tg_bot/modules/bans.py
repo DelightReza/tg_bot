@@ -45,7 +45,7 @@ def ban(bot: Bot, update: Update, args: List[str]) -> str:
         return ""
 
     if user_id == bot.id:
-        message.reply_text("I'm not gonna BAN myself, are you crazy?")
+        message.reply_text("Do You want a Gban?")
         return ""
 
     log = "<b>{}:</b>" \
@@ -189,7 +189,7 @@ def kick(bot: Bot, update: Update, args: List[str]) -> str:
         return ""
 
     if user_id == bot.id:
-        message.reply_text("Yeahhh I'm not gonna do that")
+        message.reply_text("I Will Destroy You Soon™")
         return ""
 
     res = chat.unban_member(user_id)  # unban on current user = kick
@@ -225,7 +225,7 @@ def kickme(bot: Bot, update: Update):
 
     res = update.effective_chat.unban_member(user_id)  # unban on current user = kick
     if res:
-        update.effective_message.reply_text("No problem.")
+        update.effective_message.reply_text("Go Fugoff.")
     else:
         update.effective_message.reply_text("Huh? I can't :/")
 

@@ -34,8 +34,8 @@ I'm a modular group management bot with a few fun extras! Have a look at the fol
 the things I can help you with.
 
 *Main* commands available:
- - /start: start the bot
- - /help: PM's you this message.
+ - /start: start the Bot :D
+ - /help: Pm's You This Message.
  - /help <module name>: PM's you info about that module.
  - /donate: information about how to donate!
  - /settings:
@@ -140,7 +140,7 @@ def start(bot: Bot, update: Update, args: List[str]):
                 PM_START_TEXT.format(escape_markdown(first_name), escape_markdown(bot.first_name), OWNER_ID),
                 parse_mode=ParseMode.MARKDOWN)
     else:
-        update.effective_message.reply_text("Yo, whadup?")
+        update.effective_message.reply_text("Existence Alert!!")
 
 
 # for test purposes
