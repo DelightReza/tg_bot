@@ -14,6 +14,7 @@ from tg_bot.modules.helper_funcs.extraction import extract_user, extract_user_an
 from tg_bot.modules.helper_funcs.filters import CustomFilters
 from tg_bot.modules.helper_funcs.misc import send_to_list
 from tg_bot.modules.sql.users_sql import get_all_chats
+from tg_bot.modules.disable import DisableAbleCommandHandler
 
 GBAN_ENFORCE_GROUP = 6
 
@@ -314,7 +315,7 @@ UNGBAN_HANDLER = CommandHandler("ungban", ungban, pass_args=True,
 GBAN_LIST = CommandHandler("gbanlist", gbanlist,
                            filters=CustomFilters.sudo_filter | CustomFilters.support_filter)
 
-GBAN_STATUS = CommandHandler("gbanstat", gbanstat, pass_args=True, filters=Filters.group)
+GBAN_STATUS =  DisableAbleCommandHandler("gbanstat", gbanstat, pass_args=True, filters=Filters.group)
 
 GBAN_ENFORCER = MessageHandler(Filters.all & Filters.group, enforce_gban)
 

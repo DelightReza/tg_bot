@@ -10,6 +10,7 @@ from tg_bot import dispatcher
 from tg_bot.modules.helper_funcs.chat_status import is_user_admin, user_admin, can_restrict
 from tg_bot.modules.log_channel import loggable
 from tg_bot.modules.sql import antiflood_sql as sql
+from tg_bot.modules.disable import DisableAbleCommandHandler
 
 FLOOD_GROUP = 3
 
@@ -130,8 +131,8 @@ __help__ = """
 __mod_name__ = "AntiFlood"
 
 FLOOD_BAN_HANDLER = MessageHandler(Filters.all & ~Filters.status_update & Filters.group, check_flood)
-SET_FLOOD_HANDLER = CommandHandler("setflood", set_flood, pass_args=True, filters=Filters.group)
-FLOOD_HANDLER = CommandHandler("flood", flood, filters=Filters.group)
+SET_FLOOD_HANDLER = DisableAbleCommandHandler("setflood", set_flood, pass_args=True, filters=Filters.group)
+FLOOD_HANDLER = DisableAbleCommandHandler("flood", flood, filters=Filters.group)
 
 dispatcher.add_handler(FLOOD_BAN_HANDLER, FLOOD_GROUP)
 dispatcher.add_handler(SET_FLOOD_HANDLER)

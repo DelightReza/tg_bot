@@ -10,7 +10,7 @@ from telegram.utils.helpers import mention_html
 from tg_bot import dispatcher, LOGGER
 from tg_bot.modules.helper_funcs.chat_status import user_admin, can_delete
 from tg_bot.modules.log_channel import loggable
-
+from tg_bot.modules.disable import DisableAbleCommandHandler
 
 @run_async
 @user_admin
@@ -90,8 +90,8 @@ __help__ = """
 
 __mod_name__ = "Purges"
 
-DELETE_HANDLER = CommandHandler("del", del_message, filters=Filters.group)
-PURGE_HANDLER = CommandHandler("purge", purge, filters=Filters.group, pass_args=True)
+DELETE_HANDLER = DisableAbleCommandHandler("del", del_message, filters=Filters.group)
+PURGE_HANDLER = DisableAbleCommandHandler("purge", purge, filters=Filters.group, pass_args=True)
 
 dispatcher.add_handler(DELETE_HANDLER)
 dispatcher.add_handler(PURGE_HANDLER)

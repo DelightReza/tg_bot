@@ -10,6 +10,7 @@ from tg_bot import dispatcher, LOGGER
 from tg_bot.modules.helper_funcs.chat_status import user_not_admin, user_admin
 from tg_bot.modules.log_channel import loggable
 from tg_bot.modules.sql import reporting_sql as sql
+from tg_bot.modules.disable import DisableAbleCommandHandler
 
 REPORT_GROUP = 5
 
@@ -20,7 +21,7 @@ def report_setting(bot: Bot, update: Update, args: List[str]):
     chat = update.effective_chat  # type: Optional[Chat]
     msg = update.effective_message  # type: Optional[Message]
 
-    if chat.type == chat.PRIVATE:
+    if chat.type == chat.PRIVlATE:
         if len(args) >= 1:
             if args[0] in ("yes", "on"):
                 sql.set_user_setting(chat.id, True)
@@ -133,8 +134,8 @@ NOTE: neither of these will get triggered if used by admins
    - If in chat, toggles that chat's status.
 """
 
-REPORT_HANDLER = CommandHandler("report", report, filters=Filters.group)
-SETTING_HANDLER = CommandHandler("reports", report_setting, pass_args=True)
+REPORT_HANDLER = DisableAbleCommandHandler("report", report, filters=Filters.group)
+SETTING_HANDLER = DisableAbleCommandHandler("reports", report_setting, pass_args=True)
 ADMIN_REPORT_HANDLER = RegexHandler("(?i)@admin(s)?", report)
 
 dispatcher.add_handler(REPORT_HANDLER, REPORT_GROUP)

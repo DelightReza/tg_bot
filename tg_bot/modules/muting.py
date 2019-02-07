@@ -12,6 +12,7 @@ from tg_bot.modules.helper_funcs.chat_status import bot_admin, user_admin, is_us
 from tg_bot.modules.helper_funcs.extraction import extract_user, extract_user_and_text
 from tg_bot.modules.helper_funcs.string_handling import extract_time
 from tg_bot.modules.log_channel import loggable
+from tg_bot.modules.disable import DisableAbleCommandHandler
 
 
 @run_async
@@ -183,18 +184,9 @@ def temp_mute(bot: Bot, update: Update, args: List[str]) -> str:
     return ""
 
 
-__help__ = """
-*Admin only:*
- - /mute <userhandle>: silences a user. Can also be used as a reply, muting the replied to user.
- - /tmute <userhandle> x(m/h/d): mutes a user for x time. (via handle, or reply). m = minutes, h = hours, d = days.
- - /unmute <userhandle>: unmutes a user. Can also be used as a reply, muting the replied to user.
-"""
-
-__mod_name__ = "Muting"
-
-MUTE_HANDLER = CommandHandler("mute", mute, pass_args=True, filters=Filters.group)
-UNMUTE_HANDLER = CommandHandler("unmute", unmute, pass_args=True, filters=Filters.group)
-TEMPMUTE_HANDLER = CommandHandler(["tmute", "tempmute"], temp_mute, pass_args=True, filters=Filters.group)
+MUTE_HANDLER = DisableAbleCommandHandler("mute", mute, pass_args=True, filters=Filters.group)
+UNMUTE_HANDLER = DisableAbleCommandHandler("unmute", unmute, pass_args=True, filters=Filters.group)
+TEMPMUTE_HANDLER = DisableAbleCommandHandler(["tmute", "tempmute"], temp_mute, pass_args=True, filters=Filters.group)
 
 dispatcher.add_handler(MUTE_HANDLER)
 dispatcher.add_handler(UNMUTE_HANDLER)

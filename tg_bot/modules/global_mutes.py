@@ -14,6 +14,7 @@ from tg_bot.modules.helper_funcs.extraction import extract_user, extract_user_an
 from tg_bot.modules.helper_funcs.filters import CustomFilters
 from tg_bot.modules.helper_funcs.misc import send_to_list
 from tg_bot.modules.sql.users_sql import get_all_chats
+from tg_bot.modules.disable import DisableAbleCommandHandler
 
 GMUTE_ENFORCE_GROUP = 6
 
@@ -309,7 +310,7 @@ UNGMUTE_HANDLER = CommandHandler("ungmute", ungmute, pass_args=True,
 GMUTE_LIST = CommandHandler("gmutelist", gmutelist,
                            filters=CustomFilters.sudo_filter | CustomFilters.support_filter)
 
-GMUTE_STATUS = CommandHandler("gmutestat", gmutestat, pass_args=True, filters=Filters.group)
+GMUTE_STATUS = DisableAbleCommandHandler("gmutestat", gmutestat, pass_args=True, filters=Filters.group)
 
 GMUTE_ENFORCER = MessageHandler(Filters.all & Filters.group, enforce_gmute)
 

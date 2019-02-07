@@ -2,6 +2,7 @@ from functools import wraps
 from typing import Optional
 
 from tg_bot.modules.helper_funcs.misc import is_module_loaded
+from tg_bot.modules.disable import DisableAbleCommandHandler
 
 FILENAME = __name__.rsplit(".", 1)[-1]
 
@@ -156,9 +157,9 @@ Setting the log channel is done by:
 
     __mod_name__ = "Log Channels"
 
-    LOG_HANDLER = CommandHandler("logchannel", logging)
-    SET_LOG_HANDLER = CommandHandler("setlog", setlog)
-    UNSET_LOG_HANDLER = CommandHandler("unsetlog", unsetlog)
+    LOG_HANDLER = DisableAbleCommandHandler("logchannel", logging)
+    SET_LOG_HANDLER = DisableAbleCommandHandler("setlog", setlog)
+    UNSET_LOG_HANDLER = DisableAbleCommandHandler("unsetlog", unsetlog)
 
     dispatcher.add_handler(LOG_HANDLER)
     dispatcher.add_handler(SET_LOG_HANDLER)
