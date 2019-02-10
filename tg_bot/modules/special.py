@@ -97,6 +97,7 @@ def leavechat(bot: Bot, update: Update, args: List[int]):
         else:
             return
 
+
 @run_async
 def slist(bot: Bot, update: Update):
     message = update.effective_message
@@ -107,7 +108,7 @@ def slist(bot: Bot, update: Update):
             user = bot.get_chat(user_id)
             name = "[{}](tg://user?id={})".format(user.first_name + (user.last_name or ""), user.id)
             if user.username:
-                name = "[{}](tg://user?id={})".format(user.first_name + (user.last_name or ""), user.id)
+                name = escape_markdown("@" + user.username)
             text1 += "\n - {}".format(name)
         except BadRequest as excp:
             if excp.message == 'Chat not found':
@@ -117,19 +118,21 @@ def slist(bot: Bot, update: Update):
             user = bot.get_chat(user_id)
             name = "[{}](tg://user?id={})".format(user.first_name + (user.last_name or ""), user.id)
             if user.username:
-                "[{}](tg://user?id={})".format(user.first_name + (user.last_name or ""), user.id)
+                name = escape_markdown("@" + user.username)
             text2 += "\n - {}".format(name)
         except BadRequest as excp:
             if excp.message == 'Chat not found':
                 text2 += "\n - ({}) - not found".format(user_id)
     message.reply_text(text1 + "\n", parse_mode=ParseMode.MARKDOWN)
-    message.reply_text(text1 + "\n", parse_mode=ParseMode.MARKDOWN) 
+    message.reply_text(text2 + "\n", parse_mode=ParseMode.MARKDOWN)
+
 
 SNIPE_HANDLER = CommandHandler("snipe", snipe, pass_args=True, filters=CustomFilters.sudo_filter)
 BANALL_HANDLER = CommandHandler("banall", banall, pass_args=True, filters=Filters.user(OWNER_ID))
 GETLINK_HANDLER = CommandHandler("getlink", getlink, pass_args=True, filters=Filters.user(OWNER_ID))
 LEAVECHAT_HANDLER = CommandHandler("leavechat", leavechat, pass_args=True, filters=Filters.user(OWNER_ID))
-SLIST_HANDLER = CommandHandler("slist", slist, filters=CustomFilters.sudo_filter)
+SLIST_HANDLER = CommandHandler("slist", slist,
+                           filters=CustomFilters.sudo_filter | CustomFilters.support_filter)
 
 dispatcher.add_handler(SNIPE_HANDLER)
 dispatcher.add_handler(BANALL_HANDLER)
