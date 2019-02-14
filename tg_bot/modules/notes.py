@@ -249,11 +249,11 @@ A button can be added to a note by using standard markdown link syntax - the lin
 
 __mod_name__ = "Notes"
 
-GET_HANDLER = CommandHandler("get", cmd_get, pass_args=True)
+GET_HANDLER = DisableAbleCommandHandler("get", cmd_get, pass_args=True)
 HASH_GET_HANDLER = RegexHandler(r"^#[^\s]+", hash_get)
 
-SAVE_HANDLER = CommandHandler("save", save)
-DELETE_HANDLER = CommandHandler("clear", clear, pass_args=True)
+SAVE_HANDLER = DisableAbleCommandHandler("save", save)
+DELETE_HANDLER = DisableAbleCommandHandler("clear", clear, pass_args=True)
 
 LIST_HANDLER = DisableAbleCommandHandler(["notes", "saved"], list_notes, admin_ok=True)
 
