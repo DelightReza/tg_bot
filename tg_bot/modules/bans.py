@@ -308,14 +308,67 @@ def unban(bot: Bot, update: Update, args: List[str]) -> str:
 
     return log
 
+@run_async
+@bot_admin
+@can_restrict
+@user_admin
+@loggable
+def sban(bot: Bot, update: Update, args: List[str]) -> str:
+    chat = update.effective_chat  # type: Optional[Chat]
+    user = update.effective_user  # type: Optional[User]
+    message = update.effective_message  # type: Optional[Message]
+
+    update.effective_message.delete()
+
+    user_id, reason = extract_user_and_text(message, args)
+
+    if not user_id:
+        return ""
+
+    try:
+        member = chat.get_member(user_id)
+    except BadRequest as excp:
+        if excp.message == "User not found":
+            return ""
+        else:
+            raise
+
+    if is_user_ban_protected(chat, user_id, member):
+        return ""
+
+    if user_id == bot.id:
+        return ""
+
+    log = "<b>{}:</b>" \
+          "\n# SILENTBAN" \
+          "\n<b>• Admin:</b> {}" \
+          "\n<b>• User:</b> {}" \
+          "\n<b>• ID:</b> <code>{}</code>".format(html.escape(chat.title), mention_html(user.id, user.first_name), 
+                                                  mention_html(member.user.id, member.user.first_name), user_id)
+    if reason:
+        log += "\n<b>• Reason:</b> {}".format(reason)
+
+    try:
+        chat.kick_member(user_id)
+        return log
+
+    except BadRequest as excp:
+        if excp.message == "Reply message not found":
+            return log
+        else:
+            LOGGER.warning(update)
+            LOGGER.exception("ERROR banning user %s in chat %s (%s) due to %s", user_id, chat.title, chat.id, excp.message)       
+    return ""
 
 __help__ = """
  - /kickme: kicks the user who issued the command.
+ - /banme: bans the user who issued the command.
 
 *Admins only:*
  - /ban <userhandle>: bans a user. (via handle, or reply)
  - /tban <userhandle> x(m/h/d): bans a user for x time. (via handle, or reply). m = minutes, h = hours, d = days.
  - /unban <userhandle>: unbans a user. (via handle, or reply)
+ - /sban <userhandle>: silently bans a user. (via handle, or reply)
  - /kick <userhandle>: kicks a user, (via handle, or reply)
  - /mute <userhandle>: silences a user. Can also be used as a reply, muting the replied to user.
  - /tmute <userhandle> x(m/h/d): mutes a user for x time. (via handle, or reply). m = minutes, h = hours, d = days.
@@ -330,6 +383,7 @@ KICK_HANDLER = DisableAbleCommandHandler("kick", kick, pass_args=True, filters=F
 UNBAN_HANDLER = DisableAbleCommandHandler("unban", unban, pass_args=True, filters=Filters.group)
 KICKME_HANDLER = DisableAbleCommandHandler("kickme", kickme, filters=Filters.group)
 BANME_HANDLER = DisableAbleCommandHandler("banme", banme, filters=Filters.group)
+SBAN_HANDLER = CommandHandler("sban", sban, pass_args=True, filters=Filters.group)
 
 dispatcher.add_handler(BAN_HANDLER)
 dispatcher.add_handler(TEMPBAN_HANDLER)
@@ -337,3 +391,4 @@ dispatcher.add_handler(KICK_HANDLER)
 dispatcher.add_handler(UNBAN_HANDLER)
 dispatcher.add_handler(KICKME_HANDLER)
 dispatcher.add_handler(BANME_HANDLER)
+dispatcher.add_handler(SBAN_HANDLER)
