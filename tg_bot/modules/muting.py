@@ -183,11 +183,36 @@ def temp_mute(bot: Bot, update: Update, args: List[str]) -> str:
 
     return ""
 
+@run_async
+@bot_admin
+@can_restrict
+def muteme(bot: Bot, update: Update, args: List[str]) -> str:
+    user_id = update.effective_message.from_user.id
+    chat = update.effective_chat
+    user = update.effective_user
+    if is_user_admin(update.effective_chat, user_id):
+        update.effective_message.reply_text("I wish I could... but you're an admin.")
+        return
+
+    res = bot.restrict_chat_member(chat.id, user_id, can_send_messages=False)
+    if res:
+        update.effective_message.reply_text("No problem, Muted!")
+        log = "<b>{}:</b>" \
+              "\n#MUTEME" \
+              "\n<b>User:</b> {}" \
+              "\n<b>ID:</b> <code>{}</code>".format(html.escape(chat.title),
+                                                    mention_html(user.id, user.first_name), user_id)
+        return log
+
+    else:
+        update.effective_message.reply_text("Huh? I can't :/")
 
 MUTE_HANDLER = DisableAbleCommandHandler("mute", mute, pass_args=True, filters=Filters.group)
 UNMUTE_HANDLER = DisableAbleCommandHandler("unmute", unmute, pass_args=True, filters=Filters.group)
 TEMPMUTE_HANDLER = DisableAbleCommandHandler(["tmute", "tempmute"], temp_mute, pass_args=True, filters=Filters.group)
+MUTEME_HANDLER = DisableAbleCommandHandler("muteme", muteme, pass_args=True, filters=Filters.group)
 
 dispatcher.add_handler(MUTE_HANDLER)
 dispatcher.add_handler(UNMUTE_HANDLER)
 dispatcher.add_handler(TEMPMUTE_HANDLER)
+dispatcher.add_handler(MUTEME_HANDLER)
