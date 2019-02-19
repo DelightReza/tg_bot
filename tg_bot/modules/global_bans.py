@@ -41,6 +41,7 @@ UNGBAN_ERRORS = {
     "Not in the chat",
     "Channel_private",
     "Chat_admin_required",
+    "Peer_id_invalid",
 }
 
 
