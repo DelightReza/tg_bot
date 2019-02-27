@@ -42,11 +42,11 @@ def ban(bot: Bot, update: Update, args: List[str]) -> str:
             raise
 
     if is_user_ban_protected(chat, user_id, member):
-        message.reply_text("I really wish I could ban admins...")
+        message.reply_text("*¯\_(ツ)_/¯*")
         return ""
 
     if user_id == bot.id:
-        message.reply_text("Do You want a Gban?")
+        message.reply_text("Nibba, What are you expecting?")
         return ""
 
     log = "<b>{}:</b>" \
@@ -64,7 +64,6 @@ def ban(bot: Bot, update: Update, args: List[str]) -> str:
     try:
         chat.kick_member(user_id)
         keyboard = []
-        bot.send_sticker(update.effective_chat.id, BAN_STICKER)  # banhammer marie sticker
         message.reply_text(reply, reply_markup=keyboard, parse_mode=ParseMode.HTML)
         return log
 

@@ -231,7 +231,7 @@ def info(bot: Bot, update: Update, args: List[str]):
     elif not msg.reply_to_message and (not args or (
             len(args) >= 1 and not args[0].startswith("@") and not args[0].isdigit() and not msg.parse_entities(
         [MessageEntity.TEXT_MENTION]))):
-        msg.reply_text("I can't extract a user from this.")
+        msg.reply_text("I can't extract a user from this :(")
         return
 
     else:
@@ -344,7 +344,7 @@ def reply_keyboard_remove(bot: Bot, update: Update):
     )
     old_message = bot.send_message(
         chat_id=update.message.chat_id,
-        text='trying',
+        text='Hmmm, Trying...',
         reply_markup=reply_markup,
         reply_to_message_id=update.message.message_id
     )
@@ -453,7 +453,7 @@ __help__ = """
  - /info: get information about a user.
  - /exec <language> <code> [/stdin <stdin>]: Execute a code in a specified language. Send an empty command to get the suppoerted languages.
  - /markdownhelp: quick summary of how markdown works in telegram - can only be called in private chats.
- - /removebotkeyboard: Got a nasty bot keyboard stuck in your group?
+ - /removebotkeyboard: Got a nasty bot keyboard stuck in your group try this!
 """
 
 __mod_name__ = "Misc"

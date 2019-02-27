@@ -86,7 +86,7 @@ def leavechat(bot: Bot, update: Update, args: List[int]):
     try:
         chat = bot.getChat(chat_id)
         titlechat = bot.get_chat(chat_id).title
-        bot.sendMessage(chat_id, "Goodbye all 😁")
+        bot.sendMessage(chat_id, "`I Go Away!`")
         bot.leaveChat(chat_id)
         update.effective_message.reply_text("I left group {}".format(titlechat))
 

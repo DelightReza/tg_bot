@@ -62,7 +62,7 @@ def gkick(bot: Bot, update: Update, args: List[str]):
                  "<b>Global Kick</b>" \
                  "\n#GKICK" \
                  "\n<b>Status:</b> <code>Enforcing</code>" \
-                 "\n<b>Sudo Admin:</b> {}" \
+                 "\n<b>Admin:</b> {}" \
                  "\n<b>User:</b> {}" \
                  "\n<b>ID:</b> <code>{}</code>".format(mention_html(banner.id, banner.first_name),
                                               mention_html(user_chat.id, user_chat.first_name), 

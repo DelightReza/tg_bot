@@ -56,15 +56,15 @@ def gban(bot: Bot, update: Update, args: List[str]):
         return
 
     if int(user_id) in SUDO_USERS:
-        message.reply_text("He is a Sudo User I Don't Give a fek")
+        message.reply_text("Who so Serious?")
         return
 
     if int(user_id) in SUPPORT_USERS:
-        message.reply_text("Oof He is A Support user.")
+        message.reply_text("hmmmmm")
         return
 
     if user_id == bot.id:
-        message.reply_text("You have Been Removed From **Sudo User**")
+        message.reply_text("What you are expecting? 😗")
         return
 
     try:
@@ -90,7 +90,7 @@ def gban(bot: Bot, update: Update, args: List[str]):
                      "<b>Emendation of Global Ban</b>" \
                      "\n#GBAN" \
                      "\n<b>Status:</b> <code>Amended</code>" \
-                     "\n<b>Sudo Admin:</b> {}" \
+                     "\n<b>Admin:</b> {}" \
                      "\n<b>User:</b> {}" \
                      "\n<b>ID:</b> <code>{}</code>" \
                      "\n<b>Previous Reason:</b> {}" \
@@ -109,7 +109,7 @@ def gban(bot: Bot, update: Update, args: List[str]):
                      "<b>Emendation of Global Ban</b>" \
                      "\n#GBAN" \
                      "\n<b>Status:</b> <code>New reason</code>" \
-                     "\n<b>Sudo Admin:</b> {}" \
+                     "\n<b>Admin:</b> {}" \
                      "\n<b>User:</b> {}" \
                      "\n<b>ID:</b> <code>{}</code>" \
                      "\n<b>New Reason:</b> {}".format(mention_html(banner.id, banner.first_name),
@@ -166,7 +166,7 @@ def ungban(bot: Bot, update: Update, args: List[str]):
 
     user_id = extract_user(message, args)
     if not user_id:
-        message.reply_text("You don't seem to be referring to a user.")
+        message.reply_text("You don't seem to be referring to a user ;'_;")
         return
 
     user_chat = bot.get_chat(user_id)

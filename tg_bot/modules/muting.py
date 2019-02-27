@@ -37,7 +37,7 @@ def mute(bot: Bot, update: Update, args: List[str]) -> str:
 
     if member:
         if is_user_admin(chat, user_id, member=member):
-            message.reply_text("Afraid I can't stop an admin from talking!")
+            message.reply_text("Afraid I can't stop an admin from talking ;__;")
 
         elif member.can_send_messages is None or member.can_send_messages:
             bot.restrict_chat_member(chat.id, user_id, can_send_messages=False)
@@ -50,9 +50,9 @@ def mute(bot: Bot, update: Update, args: List[str]) -> str:
                                               mention_html(member.user.id, member.user.first_name))
 
         else:
-            message.reply_text("This user is already muted!")
+            message.reply_text("This user is already muted, Haha Yes!")
     else:
-        message.reply_text("This user isn't in the chat!")
+        message.reply_text("This user isn't in the chat Sad!")
 
     return ""
 
@@ -133,7 +133,7 @@ def temp_mute(bot: Bot, update: Update, args: List[str]) -> str:
         return ""
 
     if user_id == bot.id:
-        message.reply_text("I'm not gonna MUTE myself, are you crazy?")
+        message.reply_text("What you are expecting? 😗")
         return ""
 
     if not reason:
@@ -191,7 +191,7 @@ def muteme(bot: Bot, update: Update, args: List[str]) -> str:
     chat = update.effective_chat
     user = update.effective_user
     if is_user_admin(update.effective_chat, user_id):
-        update.effective_message.reply_text("I wish I could... but you're an admin.")
+        update.effective_message.reply_text("I wish I could... but ;'_;")
         return
 
     res = bot.restrict_chat_member(chat.id, user_id, can_send_messages=False)
@@ -216,3 +216,4 @@ dispatcher.add_handler(MUTE_HANDLER)
 dispatcher.add_handler(UNMUTE_HANDLER)
 dispatcher.add_handler(TEMPMUTE_HANDLER)
 dispatcher.add_handler(MUTEME_HANDLER)
+
