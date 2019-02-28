@@ -6,6 +6,10 @@ from tg_bot import dispatcher
 
 @run_async
 def shout(bot: Bot, update: Update, args):
+    if len(args) == 0:
+        update.effective_message.reply_text("Where is text?")
+        return
+
     msg = "```"
     text = " ".join(args)
     result = []

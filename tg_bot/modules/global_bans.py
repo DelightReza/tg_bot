@@ -56,11 +56,11 @@ def gban(bot: Bot, update: Update, args: List[str]):
         return
 
     if int(user_id) in SUDO_USERS:
-        message.reply_text("Who so Serious?")
+        message.reply_text("I cant't Gban Sudo Users :V")
         return
 
     if int(user_id) in SUPPORT_USERS:
-        message.reply_text("hmmmmm")
+        message.reply_text("Dude, I can't Gban A Support User!")
         return
 
     if user_id == bot.id:
@@ -119,7 +119,7 @@ def gban(bot: Bot, update: Update, args: List[str]):
             message.reply_text("This user is already gbanned, but had no reason set; I've gone and updated it!")
 
         return
-    message.reply_text("Why so serious?")
+    message.reply_text("Living Alone is Really Better than living with fake people, Gbanning This Sad User!")
     banner = update.effective_user  # type: Optional[User]
     send_to_list(bot, SUDO_USERS + SUPPORT_USERS,
                  "<b>Global Ban</b>" \
@@ -157,7 +157,7 @@ def gban(bot: Bot, update: Update, args: List[str]):
             pass
 
     send_to_list(bot, SUDO_USERS + SUPPORT_USERS,
-                   "{} has been successfully gbanned!".format(mention_html(user_chat.id, user_chat.first_name)),
+                   "{} has been successfully gbanned :)".format(mention_html(user_chat.id, user_chat.first_name)),
                    html=True)  
 
 @run_async
