@@ -108,7 +108,7 @@ def slist(bot: Bot, update: Update):
             name = "[{}](tg://user?id={})".format(user.first_name + (user.last_name or ""), user.id)
             if user.username:
                 name = escape_markdown("@" + user.username)
-            text1 += "\n - {}".format(name)
+            text1 += "\n - `{}`".format(name)
         except BadRequest as excp:
             if excp.message == 'Chat not found':
                 text1 += "\n - ({}) - not found".format(user_id)
@@ -118,7 +118,7 @@ def slist(bot: Bot, update: Update):
             name = "[{}](tg://user?id={})".format(user.first_name + (user.last_name or ""), user.id)
             if user.username:
                 name = escape_markdown("@" + user.username)
-            text2 += "\n - {}".format(name)
+            text2 += "\n - `{}`".format(name)
         except BadRequest as excp:
             if excp.message == 'Chat not found':
                 text2 += "\n - ({}) - not found".format(user_id)
