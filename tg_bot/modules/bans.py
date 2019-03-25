@@ -359,6 +359,11 @@ def sban(bot: Bot, update: Update, args: List[str]) -> str:
     return ""
 
 __help__ = """
+Some people need to be publicly banned; spammers, annoyances, or just trolls.
+
+This module allows you to do that easily, by exposing some common actions, so everyone will see!
+
+
  - /kickme: kicks the user who issued the command.
  - /banme: bans the user who issued the command.
 
@@ -371,6 +376,15 @@ __help__ = """
  - /mute <userhandle>: silences a user. Can also be used as a reply, muting the replied to user.
  - /tmute <userhandle> x(m/h/d): mutes a user for x time. (via handle, or reply). m = minutes, h = hours, d = days.
  - /unmute <userhandle>: unmutes a user. Can also be used as a reply, muting the replied to user.
+
+An example of temporarily banning someone:
+`/tban @username 2h`; this bans a user for 2 hours.
+
+As for the silent ban, it shows no bot output results on banning a user. \
+That makes admins of chat quietly ban users without any expose.
+
+An example of banning someone silently:
+`/sban @username or 728762378`; this bans user silently and deletes command.
 """
 
 __mod_name__ = "Bans/Mutes"
